@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     int sock;
     struct sockaddr_in server_addr;
     char buffer[BUF_SIZE];
-    char result[BUF_SIZE * 4];
+    char result[BUF_SIZE * 4] = {0};
     ssize_t n;
 
     if (argc != 2) {
@@ -62,43 +62,24 @@ int main(int argc, char *argv[]) {
     send(sock, buffer, strlen(buffer), 0);
 
     // Read code from file
-    char *code = (char *)malloc(1);
+    fseek(file, 0, SEEK_END);
+    size_t file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char *code = (char *)malloc(file_size + 1);
     if (!code) {
         perror("malloc");
         close(sock);
         fclose(file);
         exit(EXIT_FAILURE);
     }
-    code[0] = '\0';
-    size_t len = 0;
 
-    while (fgets(buffer, sizeof(buffer), file)) {
-        len += strlen(buffer);
-        char *new_code = realloc(code, len + 1);
-        if (!new_code) {
-            perror("realloc");
-            free(code);
-            close(sock);
-            fclose(file);
-            exit(EXIT_FAILURE);
-        }
-        code = new_code;
-        strcat(code, buffer);
-    }
-    fclose(file);  // Close the file after reading
+    fread(code, 1, file_size, file);
+    code[file_size] = '\0';
+    fclose(file);
 
     // Send code to server
-    size_t total_sent = 0;
-    while (total_sent < strlen(code)) {
-        ssize_t sent = send(sock, code + total_sent, strlen(code) - total_sent, 0);
-        if (sent == -1) {
-            perror("send");
-            free(code);
-            close(sock);
-            exit(EXIT_FAILURE);
-        }
-        total_sent += sent;
-    }
+    send(sock, code, file_size, 0);
     free(code);
 
     // Receive result from server
@@ -112,18 +93,21 @@ int main(int argc, char *argv[]) {
 
     // Write the result to output.txt
     FILE *output_file = fopen("output.txt", "w");
-    if (output_file < 0) {
+    if (!output_file) {
         perror("fopen output");
         close(sock);
         exit(EXIT_FAILURE);
     }
-    fwrite(result, strlen(result), strlen(result), output_file);
-    
-    //fprintf(output_file, "%s", result);
+    fwrite(result, 1, n, output_file);
     fclose(output_file);
-    printf(result);
+
+    printf("%s\n", result);
+
     // Close socket
     close(sock);
+
+    // In cazul in care o sa avem nevoie sa avem mai multe fisiere, golim buffer-ul
+    memset(result, 0, sizeof(result));
 
     return 0;
 }

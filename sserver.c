@@ -109,8 +109,8 @@ void compile_and_run_cpp_code(const char *filename, char *result, size_t result_
 }
 
 void run_python_code(const char *filename, char *result, size_t result_size) {
-    char run_cmd[BUF_SIZE];
-    char buffer[BUF_SIZE];
+    char run_cmd[BUF_SIZE] = {0};
+    char buffer[BUF_SIZE] = {0};
     FILE *fp;
 
     // Create run command
