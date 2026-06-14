@@ -1,0 +1,15 @@
+[12:03:37] [INF] connected to server port=8080
+[12:03:44] [INF] sending examples/large_code.py lang=2 size=2490076114
+[12:11:50] [INF] connected to server port=8080
+[12:11:58] [INF] sending examples/large_code.py lang=2 size=2490076114
+[12:13:38] [INF] connected to server port=8080
+[12:13:46] [INF] sending examples/large_code.py lang=2 size=2490076114
+[13:24:06] [INF] connected to server port=8080
+[13:24:15] [INF] sending examples/big_logs.py lang=2 size=251
+[13:41:53] [INF] connected to server port=8080
+[13:42:01] [INF] sending examples/big_logs.py lang=2 size=251
+[13:43:15] [INF] sending examples/big_logs.py lang=2 size=255
+[13:44:03] [INF] connected to 127.0.0.1:8080
+[13:44:12] [INF] sending examples/big_logs.py lang=2 size=255
+[13:44:57] [INF] connected to 127.0.0.1:8080
+[17:18:10] [INF] connected to server port=8080
